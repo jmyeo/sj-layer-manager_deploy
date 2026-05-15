@@ -16,6 +16,7 @@ const ko: Record<TranslationKey, string> = {
   'common.required': '필수',
 
   'nav.dashboard': '대시보드',
+  'nav.mortalityAlert': '폐사 증가 알림',
   'nav.customers': '거래처',
   'nav.reports': '리포트',
   'nav.audit': '감사 로그',
@@ -181,6 +182,34 @@ const ko: Record<TranslationKey, string> = {
   'audit.changesAppear': '기록 변경 내역이 여기에 표시됩니다',
   'audit.newRecord': '새 기록 생성',
   'audit.deleted': '기록 삭제됨',
+
+  'mortality.title': '폐사 증가 알림',
+  'mortality.subtitle': '전일 대비 폐사 증가한 계군 목록',
+  'mortality.noAlerts': '폐사 증가 알림 없음',
+  'mortality.allNormal': '모든 계군의 폐사가 정상 범위입니다',
+  'mortality.flock': '계군',
+  'mortality.customer': '거래처',
+  'mortality.yesterday': '전일',
+  'mortality.today': '당일',
+  'mortality.increase': '증가',
+
+  'customers.activeFlocks': '운영 계군',
+  'customers.latestRecord': '최근 입력일',
+  'customers.noRecord': '기록 없음',
+
+  'customerDetail.last7days': '최근 7일 주요 지표',
+  'customerDetail.avgHd': '평균 HD%',
+  'customerDetail.avgHh': '평균 HH%',
+  'customerDetail.totalMortality': '총 폐사수',
+  'customerDetail.totalEggs': '총 산란수',
+  'customerDetail.recentRecords': '최근 일별 기록',
+  'customerDetail.date': '날짜',
+  'customerDetail.flock': '계군',
+  'customerDetail.mortality': '폐사',
+  'customerDetail.eggs': '산란수',
+  'customerDetail.hd': 'HD%',
+  'customerDetail.noRecords': '최근 7일간 기록이 없습니다',
+  'customerDetail.viewReport': '리포트 보기',
 };
 
 export default ko;

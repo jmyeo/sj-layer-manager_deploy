@@ -9,9 +9,11 @@ import CustomerActions from './CustomerActions';
 interface Props {
   customers: Customer[];
   showAddButton: boolean;
+  flockCounts: Record<number, number>;
+  latestRecordDates: Record<number, string>;
 }
 
-export default function CustomersContent({ customers, showAddButton }: Props) {
+export default function CustomersContent({ customers, showAddButton, flockCounts, latestRecordDates }: Props) {
   const { t } = useTranslation();
 
   return (
@@ -38,9 +40,11 @@ export default function CustomersContent({ customers, showAddButton }: Props) {
                 <div className="flex-1 min-w-0">
                   <h3 className="font-semibold text-gray-900 truncate">{customer.customer_name}</h3>
                   <p className="text-sm text-muted mt-0.5">{customer.farm_name}</p>
-                  <div className="flex items-center gap-3 mt-2 text-xs text-muted">
+                  <div className="flex items-center gap-3 mt-2 text-xs text-muted flex-wrap">
                     {customer.region && <span>{customer.region}</span>}
                     {customer.contact_name && <span>{customer.contact_name}</span>}
+                    <span>{t('customers.activeFlocks')}: {flockCounts[customer.id] ?? 0}</span>
+                    <span>{t('customers.latestRecord')}: {latestRecordDates[customer.id] ?? t('customers.noRecord')}</span>
                   </div>
                 </div>
                 <span className={`inline-flex px-2.5 py-1 rounded-full text-xs font-medium ${

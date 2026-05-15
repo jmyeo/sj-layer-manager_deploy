@@ -14,6 +14,7 @@ const en = {
   'common.required': 'Required',
 
   'nav.dashboard': 'Dashboard',
+  'nav.mortalityAlert': 'Mortality Alert',
   'nav.customers': 'Customers',
   'nav.reports': 'Reports',
   'nav.audit': 'Audit Log',
@@ -179,6 +180,34 @@ const en = {
   'audit.changesAppear': 'Changes to records will appear here',
   'audit.newRecord': 'New record created',
   'audit.deleted': 'Record deleted',
+
+  'mortality.title': 'Mortality Increase Alert',
+  'mortality.subtitle': 'Flocks with mortality increase compared to previous day',
+  'mortality.noAlerts': 'No mortality increase alerts',
+  'mortality.allNormal': 'All flocks have normal mortality levels',
+  'mortality.flock': 'Flock',
+  'mortality.customer': 'Customer',
+  'mortality.yesterday': 'Yesterday',
+  'mortality.today': 'Today',
+  'mortality.increase': 'Increase',
+
+  'customers.activeFlocks': 'Active Flocks',
+  'customers.latestRecord': 'Latest Record',
+  'customers.noRecord': 'No Record',
+
+  'customerDetail.last7days': 'Last 7 Days Summary',
+  'customerDetail.avgHd': 'Avg HD%',
+  'customerDetail.avgHh': 'Avg HH%',
+  'customerDetail.totalMortality': 'Total Mortality',
+  'customerDetail.totalEggs': 'Total Eggs',
+  'customerDetail.recentRecords': 'Recent Daily Records',
+  'customerDetail.date': 'Date',
+  'customerDetail.flock': 'Flock',
+  'customerDetail.mortality': 'Mortality',
+  'customerDetail.eggs': 'Eggs',
+  'customerDetail.hd': 'HD%',
+  'customerDetail.noRecords': 'No records in last 7 days',
+  'customerDetail.viewReport': 'View Report',
 } as const;
 
 export default en;

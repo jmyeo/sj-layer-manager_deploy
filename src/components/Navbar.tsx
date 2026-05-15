@@ -9,17 +9,17 @@ import { useTranslation, LanguageToggle } from '@/lib/i18n';
 import type { Profile } from '@/lib/types';
 
 const navItems = [
-  { href: '/', labelKey: 'nav.dashboard' as const, icon: 'dashboard' },
+  { href: '/', labelKey: 'nav.mortalityAlert' as const, icon: 'mortalityAlert' },
   { href: '/customers', labelKey: 'nav.customers' as const, icon: 'customers' },
   { href: '/reports', labelKey: 'nav.reports' as const, icon: 'reports' },
   { href: '/admin/audit', labelKey: 'nav.audit' as const, icon: 'audit' },
 ];
 
 const icons: Record<string, JSX.Element> = {
-  dashboard: (
+  mortalityAlert: (
     <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-        d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0a1 1 0 01-1-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 01-1 1" />
+        d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4.5c-.77-.833-2.694-.833-3.464 0L3.34 16.5c-.77.833.192 2.5 1.732 2.5z" />
     </svg>
   ),
   customers: (
