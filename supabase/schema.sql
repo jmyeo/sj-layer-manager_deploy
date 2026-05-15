@@ -23,16 +23,23 @@ CREATE POLICY "Users can update own profile"
   TO authenticated
   USING (auth.uid() = id);
 
--- Auto-create profile on signup
+-- Auto-create profile on signup (role from user metadata, default Farm User)
 CREATE OR REPLACE FUNCTION public.handle_new_user()
 RETURNS TRIGGER AS $$
+DECLARE
+  _role TEXT;
 BEGIN
+  _role := COALESCE(NEW.raw_user_meta_data ->> 'role', 'Farm User');
+  IF _role NOT IN ('Admin', 'Manager', 'Consultant', 'Farm User') THEN
+    _role := 'Farm User';
+  END IF;
+
   INSERT INTO public.profiles (id, name, email, role)
   VALUES (
     NEW.id,
     COALESCE(NEW.raw_user_meta_data ->> 'name', NEW.email),
     NEW.email,
-    'Farm User'
+    _role
   );
   RETURN NEW;
 END;
