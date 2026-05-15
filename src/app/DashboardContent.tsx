@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { useState } from 'react';
 import type { Flock, Customer } from '@/lib/types';
 import { getWeekAge } from '@/lib/types';
 import { useTranslation } from '@/lib/i18n';
@@ -24,23 +25,60 @@ export default function DashboardContent({
 }: Props) {
   const { t } = useTranslation();
   const todaySet = new Set(flocksWithTodayRecord);
+  const [showAlertList, setShowAlertList] = useState(false);
 
   return (
     <main className="px-4 py-6 pb-20 md:pb-6 max-w-4xl mx-auto">
-      {/* Mortality Increase Alerts */}
       <div className="mb-6">
-        <h1 className="text-xl font-bold text-gray-900">{t('mortality.title')}</h1>
-        <p className="text-sm text-muted mt-0.5">{t('mortality.subtitle')}</p>
+        <h1 className="text-2xl font-bold text-gray-900">{t('dashboard.title')}</h1>
+        <p className="text-sm text-muted mt-1">{t('dashboard.subtitle')}</p>
       </div>
 
-      {mortalityAlerts.length === 0 ? (
-        <div className="bg-white rounded-xl border border-border p-6 text-center mb-6">
-          <svg className="w-10 h-10 text-green-400 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
-          <p className="text-sm text-muted">{t('mortality.allNormal')}</p>
+      {/* KPI Cards */}
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mb-6">
+        <Link href="/customers" className="bg-white rounded-xl border border-border p-4 hover:shadow-md transition-shadow">
+          <p className="text-xs text-muted uppercase tracking-wide">{t('dashboard.customers')}</p>
+          <p className="text-3xl font-bold mt-1">{customerCount}</p>
+        </Link>
+        <div className="bg-white rounded-xl border border-border p-4">
+          <p className="text-xs text-muted uppercase tracking-wide">{t('dashboard.activeFlocks')}</p>
+          <p className="text-3xl font-bold mt-1">{flockCount}</p>
         </div>
-      ) : (
+        <div className="bg-white rounded-xl border border-border p-4">
+          <p className="text-xs text-muted uppercase tracking-wide">{t('dashboard.todayCompletion')}</p>
+          <p className="text-3xl font-bold mt-1 text-primary">{completionRate}%</p>
+          <p className="text-xs text-muted mt-1">{todayRecordCount} / {flockCount}</p>
+        </div>
+        <div className="bg-white rounded-xl border border-border p-4">
+          <p className="text-xs text-muted uppercase tracking-wide">{t('dashboard.avgHd')}</p>
+          <p className="text-3xl font-bold mt-1 text-success">{avgHd}%</p>
+        </div>
+        <div className="bg-white rounded-xl border border-border p-4">
+          <p className="text-xs text-muted uppercase tracking-wide">{t('dashboard.avgHh')}</p>
+          <p className="text-3xl font-bold mt-1 text-blue-600">{avgHh}%</p>
+        </div>
+
+        {/* Mortality Increase Card */}
+        <button
+          onClick={() => setShowAlertList(!showAlertList)}
+          className={`rounded-xl border p-4 text-left hover:shadow-md transition-shadow ${
+            mortalityAlerts.length > 0
+              ? 'bg-red-50 border-red-200'
+              : 'bg-white border-border'
+          }`}
+        >
+          <p className="text-xs text-muted uppercase tracking-wide">{t('dashboard.mortalityIncrease')}</p>
+          <p className={`text-3xl font-bold mt-1 ${mortalityAlerts.length > 0 ? 'text-red-600' : 'text-green-600'}`}>
+            {mortalityAlerts.length}
+          </p>
+          <p className="text-xs text-muted mt-1">
+            {mortalityAlerts.length > 0 ? t('dashboard.mortalityFarms') : t('mortality.allNormal')}
+          </p>
+        </button>
+      </div>
+
+      {/* Mortality Alert Detail List (toggle) */}
+      {showAlertList && mortalityAlerts.length > 0 && (
         <div className="space-y-3 mb-6">
           {mortalityAlerts.map((alert) => (
             <Link
@@ -75,37 +113,6 @@ export default function DashboardContent({
           ))}
         </div>
       )}
-
-      {/* KPI Cards */}
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mb-6">
-        <Link href="/customers" className="bg-white rounded-xl border border-border p-4 hover:shadow-md transition-shadow">
-          <p className="text-xs text-muted uppercase tracking-wide">{t('dashboard.customers')}</p>
-          <p className="text-3xl font-bold mt-1">{customerCount}</p>
-        </Link>
-        <div className="bg-white rounded-xl border border-border p-4">
-          <p className="text-xs text-muted uppercase tracking-wide">{t('dashboard.activeFlocks')}</p>
-          <p className="text-3xl font-bold mt-1">{flockCount}</p>
-        </div>
-        <div className="bg-white rounded-xl border border-border p-4">
-          <p className="text-xs text-muted uppercase tracking-wide">{t('dashboard.todayCompletion')}</p>
-          <p className="text-3xl font-bold mt-1 text-primary">{completionRate}%</p>
-          <p className="text-xs text-muted mt-1">{todayRecordCount} / {flockCount}</p>
-        </div>
-        <div className="bg-white rounded-xl border border-border p-4">
-          <p className="text-xs text-muted uppercase tracking-wide">{t('dashboard.avgHd')}</p>
-          <p className="text-3xl font-bold mt-1 text-success">{avgHd}%</p>
-        </div>
-        <div className="bg-white rounded-xl border border-border p-4">
-          <p className="text-xs text-muted uppercase tracking-wide">{t('dashboard.avgHh')}</p>
-          <p className="text-3xl font-bold mt-1 text-blue-600">{avgHh}%</p>
-        </div>
-        <Link href="/reports" className="bg-white rounded-xl border border-border p-4 hover:shadow-md transition-shadow flex flex-col items-center justify-center">
-          <svg className="w-8 h-8 text-primary mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-          </svg>
-          <span className="text-sm font-semibold text-primary">{t('dashboard.viewReports')}</span>
-        </Link>
-      </div>
 
       {/* Quick Entry */}
       <h2 className="text-lg font-bold mb-3">{t('dashboard.quickEntry')}</h2>

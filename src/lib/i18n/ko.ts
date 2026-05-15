@@ -39,6 +39,8 @@ const ko: Record<TranslationKey, string> = {
   'dashboard.avgHd': '평균 HD비율',
   'dashboard.avgHh': '평균 HH비율',
   'dashboard.viewReports': '리포트 보기',
+  'dashboard.mortalityIncrease': '폐사 증가 농가',
+  'dashboard.mortalityFarms': '폐사 증가 발생',
   'dashboard.quickEntry': '빠른 기록 입력',
   'dashboard.quickEntryDesc': '운영중인 계군 - 탭하여 오늘 기록 입력',
   'dashboard.noFlocks': '운영중인 계군이 없습니다.',

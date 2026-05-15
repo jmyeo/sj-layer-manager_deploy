@@ -37,6 +37,8 @@ const en = {
   'dashboard.avgHd': 'Avg HD Ratio',
   'dashboard.avgHh': 'Avg HH Ratio',
   'dashboard.viewReports': 'View Reports',
+  'dashboard.mortalityIncrease': 'Mortality Increase',
+  'dashboard.mortalityFarms': 'Farms with increase',
   'dashboard.quickEntry': 'Quick Record Entry',
   'dashboard.quickEntryDesc': "Active flocks - tap to add today's record",
   'dashboard.noFlocks': 'No active flocks.',
