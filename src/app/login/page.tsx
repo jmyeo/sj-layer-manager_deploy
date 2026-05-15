@@ -6,23 +6,31 @@ import { login, signup } from './actions';
 const ROLE_OPTIONS = [
   {
     value: 'Admin',
-    label: '관리자 (Admin)',
-    description: '거래처 등록, 사용자 관리, 전체 데이터 조회 / Customer registration, user management, full data access',
+    labelEn: 'Admin',
+    labelKo: '관리자',
+    descEn: 'Customer registration, user management, full data access',
+    descKo: '거래처 등록, 사용자 관리, 전체 데이터 조회',
   },
   {
     value: 'Farm User',
-    label: '필리핀 현장 담당자 (Farm User)',
-    description: '일별 사육/생산 데이터 입력 / Daily breeding & production data entry',
+    labelEn: 'Farm User',
+    labelKo: '필리핀 현장 담당자',
+    descEn: 'Daily breeding & production data entry',
+    descKo: '일별 사육/생산 데이터 입력',
   },
   {
     value: 'Consultant',
-    label: '컨설턴트/영업 담당자 (Consultant)',
-    description: '거래처별 생산성 리포트 조회 / Customer productivity report access',
+    labelEn: 'Consultant',
+    labelKo: '컨설턴트/영업 담당자',
+    descEn: 'Customer productivity report access',
+    descKo: '거래처별 생산성 리포트 조회',
   },
   {
     value: 'Manager',
-    label: '경영진/관리자 (Manager)',
-    description: '전체 사업장 성과 모니터링 / Overall business performance monitoring',
+    labelEn: 'Manager',
+    labelKo: '경영진/관리자',
+    descEn: 'Overall business performance monitoring',
+    descKo: '전체 사업장 성과 모니터링',
   },
 ] as const;
 
@@ -79,8 +87,8 @@ export default function LoginPage() {
 
         {/* Email domain notice */}
         <div className="p-3 bg-blue-50 border border-blue-200 rounded-xl text-sm text-blue-700 mb-4">
-          @sunjin.com 이메일 주소만 사용 가능합니다.<br />
-          <span className="text-blue-500">Only @sunjin.com email addresses are allowed.</span>
+          <p>Only @sunjin.com email addresses are allowed.</p>
+          <p className="text-blue-500 mt-0.5">@sunjin.com 이메일 주소만 사용 가능합니다.</p>
         </div>
 
         {/* Form */}
@@ -89,7 +97,8 @@ export default function LoginPage() {
             <>
               <div>
                 <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
-                  이름 (Name)
+                  <span>Name</span><br />
+                  <span className="text-xs text-muted">이름</span>
                 </label>
                 <input
                   id="name"
@@ -97,13 +106,14 @@ export default function LoginPage() {
                   type="text"
                   required={isSignUp}
                   className="w-full px-4 py-3 border border-border rounded-xl text-base focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-                  placeholder="이름을 입력하세요 / Enter your name"
+                  placeholder="Enter your name / 이름을 입력하세요"
                 />
               </div>
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  권한 선택 (Select Role)
+                  <span>Select Role</span><br />
+                  <span className="text-xs text-muted">권한 선택</span>
                 </label>
                 <input type="hidden" name="role" value={selectedRole} />
                 <div className="space-y-2">
@@ -126,10 +136,14 @@ export default function LoginPage() {
                       />
                       <div>
                         <span className="text-sm font-semibold text-gray-900">
-                          {option.label}
+                          {option.labelEn}
                         </span>
-                        <p className="text-xs text-muted mt-0.5">
-                          {option.description}
+                        <span className="text-xs text-muted ml-1">{option.labelKo}</span>
+                        <p className="text-xs text-gray-600 mt-0.5">
+                          {option.descEn}
+                        </p>
+                        <p className="text-xs text-muted">
+                          {option.descKo}
                         </p>
                       </div>
                     </label>
@@ -141,7 +155,8 @@ export default function LoginPage() {
 
           <div>
             <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-              이메일 (Email)
+              <span>Email</span><br />
+              <span className="text-xs text-muted">이메일</span>
             </label>
             <input
               id="email"
@@ -155,7 +170,8 @@ export default function LoginPage() {
 
           <div>
             <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
-              비밀번호 (Password)
+              <span>Password</span><br />
+              <span className="text-xs text-muted">비밀번호</span>
             </label>
             <input
               id="password"
@@ -164,7 +180,7 @@ export default function LoginPage() {
               required
               minLength={6}
               className="w-full px-4 py-3 border border-border rounded-xl text-base focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-              placeholder="6자리 이상 / Min 6 characters"
+              placeholder="Min 6 characters / 6자리 이상"
             />
           </div>
 
@@ -185,7 +201,11 @@ export default function LoginPage() {
             disabled={loading}
             className="w-full py-3 bg-primary text-white font-semibold rounded-xl hover:bg-primary-dark transition-colors disabled:opacity-50"
           >
-            {loading ? '처리 중... / Loading...' : isSignUp ? '회원가입 (Sign Up)' : '로그인 (Sign In)'}
+            {loading ? 'Loading... / 처리 중...' : isSignUp ? (
+              <><span>Sign Up</span><br /><span className="text-xs font-normal opacity-80">회원가입</span></>
+            ) : (
+              <><span>Sign In</span><br /><span className="text-xs font-normal opacity-80">로그인</span></>
+            )}
           </button>
         </form>
 
@@ -198,7 +218,11 @@ export default function LoginPage() {
             }}
             className="text-sm text-primary font-medium hover:underline"
           >
-            {isSignUp ? '이미 계정이 있으신가요? 로그인 / Already have an account? Sign In' : '계정이 없으신가요? 회원가입 / Don\'t have an account? Sign Up'}
+            {isSignUp ? (
+              <><span>Already have an account? Sign In</span><br /><span className="text-xs text-muted">이미 계정이 있으신가요? 로그인</span></>
+            ) : (
+              <><span>Don&apos;t have an account? Sign Up</span><br /><span className="text-xs text-muted">계정이 없으신가요? 회원가입</span></>
+            )}
           </button>
         </div>
       </div>
