@@ -17,6 +17,11 @@ export default function AuditContent({ logs }: Props) {
 
   return (
     <>
+      <div className="mb-6">
+        <h1 className="text-xl font-bold text-gray-900">{t('audit.title')}</h1>
+        <p className="text-sm text-muted mt-0.5">{t('audit.subtitle')}</p>
+      </div>
+
       {/* Mobile cards */}
       <div className="md:hidden space-y-3">
         {logs.map((log) => (

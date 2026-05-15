@@ -3,7 +3,6 @@ import { getUserProfile, canAccessAdmin } from '@/lib/auth';
 import { redirect } from 'next/navigation';
 import type { AuditLog } from '@/lib/types';
 import Navbar from '@/components/Navbar';
-import PageHeader from '@/components/PageHeader';
 import AuditContent from './AuditContent';
 
 export default async function AuditPage() {
@@ -32,7 +31,6 @@ export default async function AuditPage() {
     <div className="md:ml-64">
       <Navbar />
       <main className="px-4 py-6 pb-20 md:pb-6 max-w-5xl mx-auto">
-        <PageHeader title="Audit Log" subtitle="" backHref="/" />
         <AuditContent logs={auditLogs} />
       </main>
     </div>
