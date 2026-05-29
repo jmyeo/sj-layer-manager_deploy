@@ -210,6 +210,25 @@ const en = {
   'customerDetail.hd': 'HD%',
   'customerDetail.noRecords': 'No records in last 7 days',
   'customerDetail.viewReport': 'View Report',
+
+  'nav.performance': 'Performance',
+
+  'performance.title': 'Performance Monitoring',
+  'performance.subtitle': 'Compare performance across all customers',
+  'performance.customerRanking': 'Customer Performance Ranking',
+  'performance.hdTrend': 'HD Ratio Trend Comparison',
+  'performance.mortalityTrend': 'Mortality Trend',
+  'performance.noData': 'No data available',
+  'performance.customer': 'Customer',
+  'performance.flocks': 'Flocks',
+  'performance.avgHd': 'Avg HD%',
+  'performance.avgHh': 'Avg HH%',
+  'performance.mortalityRate': 'Mortality Rate',
+  'performance.totalEggs': 'Total Eggs',
+  'performance.avgFeed': 'Avg Feed (g)',
+  'performance.rank': 'Rank',
+  'performance.top5Hd': 'Top 5 HD% Trend',
+  'performance.top5Mortality': 'Top 5 Mortality Trend',
 } as const;
 
 export default en;

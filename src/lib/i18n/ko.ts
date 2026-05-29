@@ -212,6 +212,25 @@ const ko: Record<TranslationKey, string> = {
   'customerDetail.hd': 'HD%',
   'customerDetail.noRecords': '최근 7일간 기록이 없습니다',
   'customerDetail.viewReport': '리포트 보기',
+
+  'nav.performance': '성과 모니터링',
+
+  'performance.title': '전체 성과 모니터링',
+  'performance.subtitle': '거래처별 성적 비교 및 추이',
+  'performance.customerRanking': '거래처별 성적 랭킹',
+  'performance.hdTrend': 'HD비율 추이 비교',
+  'performance.mortalityTrend': '폐사율 추이',
+  'performance.noData': '데이터가 없습니다',
+  'performance.customer': '거래처',
+  'performance.flocks': '계군수',
+  'performance.avgHd': '평균 HD%',
+  'performance.avgHh': '평균 HH%',
+  'performance.mortalityRate': '폐사율',
+  'performance.totalEggs': '총 산란수',
+  'performance.avgFeed': '마리당 사료(g)',
+  'performance.rank': '순위',
+  'performance.top5Hd': '상위 5 HD% 추이',
+  'performance.top5Mortality': '상위 5 폐사율 추이',
 };
 
 export default ko;

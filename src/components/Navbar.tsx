@@ -9,10 +9,11 @@ import { useTranslation, LanguageToggle } from '@/lib/i18n';
 import type { Profile } from '@/lib/types';
 
 const navItems = [
-  { href: '/', labelKey: 'nav.dashboard' as const, icon: 'dashboard' },
-  { href: '/customers', labelKey: 'nav.customers' as const, icon: 'customers' },
-  { href: '/reports', labelKey: 'nav.reports' as const, icon: 'reports' },
-  { href: '/admin/audit', labelKey: 'nav.audit' as const, icon: 'audit' },
+  { href: '/', labelKey: 'nav.dashboard' as const, icon: 'dashboard', roles: null },
+  { href: '/performance', labelKey: 'nav.performance' as const, icon: 'performance', roles: ['Admin', 'Manager'] as string[] },
+  { href: '/customers', labelKey: 'nav.customers' as const, icon: 'customers', roles: null },
+  { href: '/reports', labelKey: 'nav.reports' as const, icon: 'reports', roles: null },
+  { href: '/admin/audit', labelKey: 'nav.audit' as const, icon: 'audit', roles: null },
 ];
 
 const icons: Record<string, JSX.Element> = {
@@ -20,6 +21,12 @@ const icons: Record<string, JSX.Element> = {
     <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
         d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0a1 1 0 01-1-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 01-1 1" />
+    </svg>
+  ),
+  performance: (
+    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+        d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
     </svg>
   ),
   customers: (
@@ -94,7 +101,7 @@ export default function Navbar() {
           <LanguageToggle />
         </div>
         <nav className="flex-1 px-4 py-4 space-y-1">
-          {navItems.map((item) => {
+          {navItems.filter((item) => !item.roles || (profile && item.roles.includes(profile.role))).map((item) => {
             const isActive = pathname === item.href ||
               (item.href !== '/' && pathname.startsWith(item.href));
             return (
@@ -141,7 +148,7 @@ export default function Navbar() {
       {/* Mobile bottom nav */}
       <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-border z-50 safe-bottom">
         <div className="flex justify-around items-center h-16">
-          {navItems.slice(0, 3).map((item) => {
+          {navItems.filter((item) => !item.roles || (profile && item.roles.includes(profile.role))).slice(0, 4).map((item) => {
             const isActive = pathname === item.href ||
               (item.href !== '/' && pathname.startsWith(item.href));
             return (
