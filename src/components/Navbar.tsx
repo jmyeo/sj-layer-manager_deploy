@@ -10,9 +10,9 @@ import type { Profile } from '@/lib/types';
 
 const navItems = [
   { href: '/', labelKey: 'nav.dashboard' as const, icon: 'dashboard', roles: null },
-  { href: '/performance', labelKey: 'nav.performance' as const, icon: 'performance', roles: ['Admin', 'Manager'] as string[] },
   { href: '/customers', labelKey: 'nav.customers' as const, icon: 'customers', roles: null },
   { href: '/reports', labelKey: 'nav.reports' as const, icon: 'reports', roles: null },
+  { href: '/performance', labelKey: 'nav.performance' as const, icon: 'performance', roles: ['Admin', 'Manager'] as string[] },
   { href: '/admin/audit', labelKey: 'nav.audit' as const, icon: 'audit', roles: null },
 ];
 
