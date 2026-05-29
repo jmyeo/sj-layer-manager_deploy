@@ -14,7 +14,7 @@ export interface CustomerPerformance {
   mortalityRate: number;
   totalEggs: number;
   avgFeedG: number;
-  dailyData: { date: string; avgHd: number; mortality: number }[];
+  dailyData: { date: string; avgHd: number; avgHh: number; avgFeedG: number; mortality: number; eggs: number }[];
 }
 
 export default async function PerformancePage() {
@@ -90,17 +90,23 @@ export default async function PerformancePage() {
     const totalEggs = recs.reduce((s, r) => s + r.egg_count, 0);
 
     // Daily aggregation for trend charts
-    const byDate = new Map<string, { hdArr: number[]; mortality: number }>();
+    const byDate = new Map<string, { hdArr: number[]; hhArr: number[]; feedGArr: number[]; mortality: number; eggs: number }>();
     for (const r of recs) {
-      const d = byDate.get(r.record_date) ?? { hdArr: [], mortality: 0 };
+      const d = byDate.get(r.record_date) ?? { hdArr: [], hhArr: [], feedGArr: [], mortality: 0, eggs: 0 };
       if (r.hd_ratio != null) d.hdArr.push(r.hd_ratio);
+      if (r.hh_ratio != null) d.hhArr.push(r.hh_ratio);
+      if (r.avg_feed_g != null) d.feedGArr.push(r.avg_feed_g);
       d.mortality += r.mortality;
+      d.eggs += r.egg_count;
       byDate.set(r.record_date, d);
     }
     const dailyData = Array.from(byDate.entries()).map(([date, d]) => ({
       date,
       avgHd: d.hdArr.length > 0 ? Math.round((d.hdArr.reduce((a, b) => a + b, 0) / d.hdArr.length) * 100) / 100 : 0,
+      avgHh: d.hhArr.length > 0 ? Math.round((d.hhArr.reduce((a, b) => a + b, 0) / d.hhArr.length) * 100) / 100 : 0,
+      avgFeedG: d.feedGArr.length > 0 ? Math.round((d.feedGArr.reduce((a, b) => a + b, 0) / d.feedGArr.length) * 100) / 100 : 0,
       mortality: d.mortality,
+      eggs: d.eggs,
     }));
 
     return {

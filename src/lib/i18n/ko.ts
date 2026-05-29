@@ -231,6 +231,11 @@ const ko: Record<TranslationKey, string> = {
   'performance.rank': '순위',
   'performance.top5Hd': '상위 5 HD% 추이',
   'performance.top5Mortality': '상위 5 폐사율 추이',
+  'performance.chartHd': '거래처별 HD비율(%) 추이 — 현재 사육수 대비 생산성',
+  'performance.chartHh': '거래처별 HH비율(%) 추이 — 입식수 대비 누적 생산성',
+  'performance.chartMortality': '거래처별 일일 폐사수 추이',
+  'performance.chartFeed': '거래처별 마리당 사료 섭취량(g) 추이',
+  'performance.chartEggs': '거래처별 일일 산란수 추이',
 };
 
 export default ko;

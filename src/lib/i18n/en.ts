@@ -229,6 +229,11 @@ const en = {
   'performance.rank': 'Rank',
   'performance.top5Hd': 'Top 5 HD% Trend',
   'performance.top5Mortality': 'Top 5 Mortality Trend',
+  'performance.chartHd': 'HD Ratio (%) - Production Efficiency by Customer',
+  'performance.chartHh': 'HH Ratio (%) - Overall Productivity by Customer',
+  'performance.chartMortality': 'Daily Mortality Count by Customer',
+  'performance.chartFeed': 'Avg Feed Intake per Bird (g) by Customer',
+  'performance.chartEggs': 'Daily Egg Production by Customer',
 } as const;
 
 export default en;

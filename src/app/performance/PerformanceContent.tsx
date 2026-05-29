@@ -9,6 +9,8 @@ import { useTranslation } from '@/lib/i18n';
 import type { CustomerPerformance } from './page';
 
 type RangePreset = '7d' | '30d' | 'all';
+type SortKey = 'avgHd' | 'avgHh' | 'mortalityRate' | 'totalEggs' | 'avgFeedG' | 'flockCount';
+type SortDir = 'asc' | 'desc';
 
 interface Props {
   data: CustomerPerformance[];
@@ -30,14 +32,37 @@ function getDateRange(preset: RangePreset) {
 export default function PerformanceContent({ data }: Props) {
   const { t } = useTranslation();
   const [preset, setPreset] = useState<RangePreset>('30d');
+  const [sortKey, setSortKey] = useState<SortKey>('avgHd');
+  const [sortDir, setSortDir] = useState<SortDir>('desc');
+
+  const handleSort = (key: SortKey) => {
+    if (sortKey === key) {
+      setSortDir(sortDir === 'desc' ? 'asc' : 'desc');
+    } else {
+      setSortKey(key);
+      setSortDir(key === 'mortalityRate' ? 'asc' : 'desc');
+    }
+  };
+
+  const sortedData = useMemo(() => {
+    return [...data].sort((a, b) => {
+      const diff = a[sortKey] - b[sortKey];
+      return sortDir === 'desc' ? -diff : diff;
+    });
+  }, [data, sortKey, sortDir]);
+
+  const sortIcon = (key: SortKey) => {
+    if (sortKey !== key) return ' ↕';
+    return sortDir === 'desc' ? ' ↓' : ' ↑';
+  };
 
   const { start, end } = getDateRange(preset);
 
   // Top 5 customers by HD for trend charts
   const top5 = useMemo(() => data.slice(0, 5), [data]);
 
-  // Build HD trend chart data
-  const hdTrendData = useMemo(() => {
+  // Helper to build trend data for a specific metric
+  const buildTrendData = useMemo(() => {
     const dateSet = new Set<string>();
     for (const c of top5) {
       for (const d of c.dailyData) {
@@ -45,33 +70,25 @@ export default function PerformanceContent({ data }: Props) {
       }
     }
     const dates = Array.from(dateSet).sort();
-    return dates.map((date) => {
-      const point: Record<string, string | number> = { date: date.slice(5) };
-      for (const c of top5) {
-        const d = c.dailyData.find((r) => r.date === date);
-        point[c.customerName] = d?.avgHd ?? 0;
-      }
-      return point;
-    });
-  }, [top5, start, end]);
 
-  // Build mortality trend chart data
-  const mortalityTrendData = useMemo(() => {
-    const dateSet = new Set<string>();
-    for (const c of top5) {
-      for (const d of c.dailyData) {
-        if (d.date >= start && d.date <= end) dateSet.add(d.date);
-      }
-    }
-    const dates = Array.from(dateSet).sort();
-    return dates.map((date) => {
-      const point: Record<string, string | number> = { date: date.slice(5) };
-      for (const c of top5) {
-        const d = c.dailyData.find((r) => r.date === date);
-        point[c.customerName] = d?.mortality ?? 0;
-      }
-      return point;
-    });
+    const buildForMetric = (metric: 'avgHd' | 'avgHh' | 'avgFeedG' | 'mortality' | 'eggs') => {
+      return dates.map((date) => {
+        const point: Record<string, string | number> = { date: date.slice(5) };
+        for (const c of top5) {
+          const d = c.dailyData.find((r) => r.date === date);
+          point[c.customerName] = d ? d[metric] : 0;
+        }
+        return point;
+      });
+    };
+
+    return {
+      hd: buildForMetric('avgHd'),
+      hh: buildForMetric('avgHh'),
+      mortality: buildForMetric('mortality'),
+      feedG: buildForMetric('avgFeedG'),
+      eggs: buildForMetric('eggs'),
+    };
   }, [top5, start, end]);
 
   const presets: { key: RangePreset; label: string }[] = [
@@ -113,7 +130,7 @@ export default function PerformanceContent({ data }: Props) {
 
           {/* Mobile cards */}
           <div className="md:hidden space-y-3 mb-6">
-            {data.map((c, i) => (
+            {sortedData.map((c, i) => (
               <div key={c.customerId} className="bg-white rounded-xl border border-border p-4">
                 <div className="flex justify-between items-center mb-2">
                   <span className="font-bold text-gray-900">#{i + 1} {c.customerName}</span>
@@ -152,16 +169,16 @@ export default function PerformanceContent({ data }: Props) {
                 <tr className="bg-gray-50 text-left text-muted border-b border-border">
                   <th className="px-3 py-3 font-medium">{t('performance.rank')}</th>
                   <th className="px-3 py-3 font-medium">{t('performance.customer')}</th>
-                  <th className="px-3 py-3 font-medium text-right">{t('performance.flocks')}</th>
-                  <th className="px-3 py-3 font-medium text-right">{t('performance.avgHd')}</th>
-                  <th className="px-3 py-3 font-medium text-right">{t('performance.avgHh')}</th>
-                  <th className="px-3 py-3 font-medium text-right">{t('performance.mortalityRate')}</th>
-                  <th className="px-3 py-3 font-medium text-right">{t('performance.totalEggs')}</th>
-                  <th className="px-3 py-3 font-medium text-right">{t('performance.avgFeed')}</th>
+                  <th className="px-3 py-3 font-medium text-right cursor-pointer hover:text-gray-900 select-none" onClick={() => handleSort('flockCount')}>{t('performance.flocks')}{sortIcon('flockCount')}</th>
+                  <th className="px-3 py-3 font-medium text-right cursor-pointer hover:text-gray-900 select-none" onClick={() => handleSort('avgHd')}>{t('performance.avgHd')}{sortIcon('avgHd')}</th>
+                  <th className="px-3 py-3 font-medium text-right cursor-pointer hover:text-gray-900 select-none" onClick={() => handleSort('avgHh')}>{t('performance.avgHh')}{sortIcon('avgHh')}</th>
+                  <th className="px-3 py-3 font-medium text-right cursor-pointer hover:text-gray-900 select-none" onClick={() => handleSort('mortalityRate')}>{t('performance.mortalityRate')}{sortIcon('mortalityRate')}</th>
+                  <th className="px-3 py-3 font-medium text-right cursor-pointer hover:text-gray-900 select-none" onClick={() => handleSort('totalEggs')}>{t('performance.totalEggs')}{sortIcon('totalEggs')}</th>
+                  <th className="px-3 py-3 font-medium text-right cursor-pointer hover:text-gray-900 select-none" onClick={() => handleSort('avgFeedG')}>{t('performance.avgFeed')}{sortIcon('avgFeedG')}</th>
                 </tr>
               </thead>
               <tbody>
-                {data.map((c, i) => (
+                {sortedData.map((c, i) => (
                   <tr key={c.customerId} className="border-b border-border last:border-0 hover:bg-gray-50">
                     <td className="px-3 py-3 font-bold text-primary">{i + 1}</td>
                     <td className="px-3 py-3 font-medium">{c.customerName}</td>
@@ -177,28 +194,21 @@ export default function PerformanceContent({ data }: Props) {
             </table>
           </div>
 
-          {/* HD Trend Chart */}
-          <h2 className="text-lg font-bold mb-3">{t('performance.top5Hd')}</h2>
+          {/* HD Ratio Trend */}
+          <h2 className="text-lg font-bold mb-3">{t('performance.chartHd')}</h2>
           <div className="bg-white rounded-xl border border-border p-4 mb-6">
-            {hdTrendData.length > 0 ? (
+            {buildTrendData.hd.length > 0 ? (
               <div className="w-full overflow-x-auto">
                 <div className="min-w-[360px]" style={{ height: 280 }}>
                   <ResponsiveContainer width="100%" height="100%">
-                    <LineChart data={hdTrendData}>
+                    <LineChart data={buildTrendData.hd}>
                       <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
                       <XAxis dataKey="date" tick={{ fontSize: 10 }} />
                       <YAxis tick={{ fontSize: 10 }} unit="%" />
                       <Tooltip />
                       <Legend />
                       {top5.map((c, i) => (
-                        <Line
-                          key={c.customerId}
-                          type="monotone"
-                          dataKey={c.customerName}
-                          stroke={COLORS[i]}
-                          strokeWidth={2}
-                          dot={false}
-                        />
+                        <Line key={c.customerId} type="monotone" dataKey={c.customerName} stroke={COLORS[i]} strokeWidth={2} dot={false} />
                       ))}
                     </LineChart>
                   </ResponsiveContainer>
@@ -209,26 +219,96 @@ export default function PerformanceContent({ data }: Props) {
             )}
           </div>
 
-          {/* Mortality Trend Chart */}
-          <h2 className="text-lg font-bold mb-3">{t('performance.top5Mortality')}</h2>
+          {/* HH Ratio Trend */}
+          <h2 className="text-lg font-bold mb-3">{t('performance.chartHh')}</h2>
           <div className="bg-white rounded-xl border border-border p-4 mb-6">
-            {mortalityTrendData.length > 0 ? (
+            {buildTrendData.hh.length > 0 ? (
               <div className="w-full overflow-x-auto">
                 <div className="min-w-[360px]" style={{ height: 280 }}>
                   <ResponsiveContainer width="100%" height="100%">
-                    <BarChart data={mortalityTrendData}>
+                    <LineChart data={buildTrendData.hh}>
+                      <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+                      <XAxis dataKey="date" tick={{ fontSize: 10 }} />
+                      <YAxis tick={{ fontSize: 10 }} unit="%" />
+                      <Tooltip />
+                      <Legend />
+                      {top5.map((c, i) => (
+                        <Line key={c.customerId} type="monotone" dataKey={c.customerName} stroke={COLORS[i]} strokeWidth={2} dot={false} />
+                      ))}
+                    </LineChart>
+                  </ResponsiveContainer>
+                </div>
+              </div>
+            ) : (
+              <p className="text-muted text-center py-8">{t('performance.noData')}</p>
+            )}
+          </div>
+
+          {/* Mortality Trend */}
+          <h2 className="text-lg font-bold mb-3">{t('performance.chartMortality')}</h2>
+          <div className="bg-white rounded-xl border border-border p-4 mb-6">
+            {buildTrendData.mortality.length > 0 ? (
+              <div className="w-full overflow-x-auto">
+                <div className="min-w-[360px]" style={{ height: 280 }}>
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart data={buildTrendData.mortality}>
                       <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
                       <XAxis dataKey="date" tick={{ fontSize: 10 }} />
                       <YAxis tick={{ fontSize: 10 }} />
                       <Tooltip />
                       <Legend />
                       {top5.map((c, i) => (
-                        <Bar
-                          key={c.customerId}
-                          dataKey={c.customerName}
-                          fill={COLORS[i]}
-                          radius={[2, 2, 0, 0]}
-                        />
+                        <Bar key={c.customerId} dataKey={c.customerName} fill={COLORS[i]} radius={[2, 2, 0, 0]} />
+                      ))}
+                    </BarChart>
+                  </ResponsiveContainer>
+                </div>
+              </div>
+            ) : (
+              <p className="text-muted text-center py-8">{t('performance.noData')}</p>
+            )}
+          </div>
+
+          {/* Feed Intake Trend */}
+          <h2 className="text-lg font-bold mb-3">{t('performance.chartFeed')}</h2>
+          <div className="bg-white rounded-xl border border-border p-4 mb-6">
+            {buildTrendData.feedG.length > 0 ? (
+              <div className="w-full overflow-x-auto">
+                <div className="min-w-[360px]" style={{ height: 280 }}>
+                  <ResponsiveContainer width="100%" height="100%">
+                    <LineChart data={buildTrendData.feedG}>
+                      <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+                      <XAxis dataKey="date" tick={{ fontSize: 10 }} />
+                      <YAxis tick={{ fontSize: 10 }} unit="g" />
+                      <Tooltip />
+                      <Legend />
+                      {top5.map((c, i) => (
+                        <Line key={c.customerId} type="monotone" dataKey={c.customerName} stroke={COLORS[i]} strokeWidth={2} dot={false} />
+                      ))}
+                    </LineChart>
+                  </ResponsiveContainer>
+                </div>
+              </div>
+            ) : (
+              <p className="text-muted text-center py-8">{t('performance.noData')}</p>
+            )}
+          </div>
+
+          {/* Egg Production Trend */}
+          <h2 className="text-lg font-bold mb-3">{t('performance.chartEggs')}</h2>
+          <div className="bg-white rounded-xl border border-border p-4 mb-6">
+            {buildTrendData.eggs.length > 0 ? (
+              <div className="w-full overflow-x-auto">
+                <div className="min-w-[360px]" style={{ height: 280 }}>
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart data={buildTrendData.eggs}>
+                      <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+                      <XAxis dataKey="date" tick={{ fontSize: 10 }} />
+                      <YAxis tick={{ fontSize: 10 }} />
+                      <Tooltip />
+                      <Legend />
+                      {top5.map((c, i) => (
+                        <Bar key={c.customerId} dataKey={c.customerName} fill={COLORS[i]} radius={[2, 2, 0, 0]} />
                       ))}
                     </BarChart>
                   </ResponsiveContainer>
