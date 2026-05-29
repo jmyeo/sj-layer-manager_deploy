@@ -19,7 +19,7 @@ const en = {
   'nav.reports': 'Reports',
   'nav.audit': 'Audit Log',
 
-  'login.title': 'Sunjin Layer PM',
+  'login.title': 'Sunjin Egg on',
   'login.subtitle': 'Layer Farm Performance Manager',
   'login.email': 'Email',
   'login.password': 'Password',

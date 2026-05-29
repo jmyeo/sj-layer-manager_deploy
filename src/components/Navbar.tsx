@@ -90,7 +90,7 @@ export default function Navbar() {
       {/* Desktop sidebar */}
       <aside className="hidden md:flex md:flex-col md:w-64 md:fixed md:inset-y-0 bg-white border-r border-border">
         <div className="flex items-center justify-between h-16 px-6 border-b border-border">
-          <h1 className="text-lg font-bold text-primary">Sunjin Layer PM</h1>
+          <h1 className="text-lg font-bold text-primary">Sunjin Egg on</h1>
           <LanguageToggle />
         </div>
         <nav className="flex-1 px-4 py-4 space-y-1">

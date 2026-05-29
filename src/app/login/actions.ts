@@ -45,14 +45,17 @@ export async function signup(formData: FormData) {
     return { error: '유효하지 않은 권한입니다.' };
   }
 
+  const password = formData.get('password') as string;
+
   const { error } = await supabase.auth.signUp({
     email,
-    password: formData.get('password') as string,
+    password,
     options: {
       data: {
         name,
         role,
       },
+      emailRedirectTo: undefined,
     },
   });
 
@@ -60,5 +63,6 @@ export async function signup(formData: FormData) {
     return { error: error.message };
   }
 
-  return { success: '이메일을 확인하여 계정을 인증해 주세요.' };
+  revalidatePath('/', 'layout');
+  redirect('/');
 }

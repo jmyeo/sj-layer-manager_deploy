@@ -21,7 +21,7 @@ const ko: Record<TranslationKey, string> = {
   'nav.reports': '리포트',
   'nav.audit': '감사 로그',
 
-  'login.title': 'Sunjin Layer PM',
+  'login.title': 'Sunjin Egg on',
   'login.subtitle': '산란계 농장 성적 관리 시스템',
   'login.email': '이메일',
   'login.password': '비밀번호',
