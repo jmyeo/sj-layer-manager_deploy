@@ -54,8 +54,6 @@ export default function LoginPage() {
         const result = await signup(formData);
         if (result?.error) {
           setError(result.error);
-        } else if (result?.success) {
-          setSuccess(result.success);
         }
       } else {
         const result = await login(formData);
